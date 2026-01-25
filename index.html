@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordgame</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,1,0" />
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/views.css">
+</head>
+<body>
+
+    <!-- Theme Toggle (Fixed Top Right) -->
+    <button id="btn-theme-toggle" class="theme-float-btn" title="Toggle Theme">
+        <span class="material-symbols-rounded icon-md">dark_mode</span>
+    </button>
+
+    <!-- Sidebar / Bottom Bar (Hidden initially) -->
+    <nav class="app-rail hidden" id="app-nav">
+        <button class="nav-btn active" data-view="game" title="Game">
+            <span class="material-symbols-rounded icon-lg">sports_esports</span>
+        </button>
+        <button class="nav-btn" data-view="tod" title="Truth or Dare">
+            <span class="material-symbols-rounded icon-lg">style</span>
+        </button>
+        <button class="nav-btn" data-view="leaderboard" title="Leaderboard">
+            <span class="material-symbols-rounded icon-lg">trophy</span>
+        </button>
+        <button class="nav-btn" data-view="profile" title="Profile">
+            <span class="material-symbols-rounded icon-lg">account_circle</span>
+        </button>
+    </nav>
+
+    <main class="app-main">
+        
+        <!-- === LOGIN VIEW === -->
+        <section id="view-login" class="view-container">
+            <div class="hero-icon">
+                <!-- FIXED: var(--c-primary) -> var(--color-primary) -->
+                <span class="material-symbols-rounded" style="animation: float 3s infinite ease-in-out; color: var(--color-primary);">fingerprint</span>
+            </div>
+            
+            <div class="g-card" style="text-align: center; max-width: 400px; margin: 0 auto;">
+                <h2 style="margin-bottom: 5px;">Welcome</h2>
+                <!-- FIXED: var(--c-text-dim) -> var(--color-text-dim) -->
+                <p style="color: var(--color-text-dim); margin-bottom: 30px;">Enter the system</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div class="input-pill">
+                        <!-- FIXED: var(--c-text-dim) -> var(--color-text-dim) -->
+                        <span class="material-symbols-rounded" style="color: var(--color-text-dim); margin-right: 10px;">person</span>
+                        <input type="text" id="login-username" class="clean-input" placeholder="USERNAME" autocomplete="off">
+                    </div>
+                    <div class="input-pill">
+                        <!-- FIXED: var(--c-text-dim) -> var(--color-text-dim) -->
+                        <span class="material-symbols-rounded" style="color: var(--color-text-dim); margin-right: 10px;">mail</span>
+                        <input type="email" id="login-email" class="clean-input" placeholder="EMAIL" autocomplete="off">
+                    </div>
+                </div>
+
+                <div id="login-error" style="color: var(--color-error); font-size: 0.9rem; margin-top: 15px; min-height: 20px;"></div>
+
+                <button id="btn-login" class="action-fab icon-xl" style="width: 70px; height: 70px; margin: 30px auto 10px;">
+                    <span class="material-symbols-rounded icon-lg">arrow_forward</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- === WORD SCRAMBLE === -->
+        <section id="view-game" class="view-container hidden">
+            <div class="hero-icon">
+                <span class="material-symbols-rounded" style="animation: float 3s infinite ease-in-out;">extension</span>
+            </div>
+
+            <div id="game-state-start" class="g-card" style="text-align: center;">
+                <h2 style="margin-bottom: 10px;">Word Scramble</h2>
+                <button id="btn-start" class="action-fab icon-xl" style="width: 80px; height: 80px; margin: 20px auto;">
+                    <span class="material-symbols-rounded icon-lg">play_arrow</span>
+                </button>
+            </div>
+
+            <div id="game-state-play" class="g-card hidden">
+                <div class="flex-center" style="justify-content: space-between; margin-bottom: 20px;">
+                    <div class="progress-dots" id="progress-dots"></div>
+                    <button id="btn-quit" style="background:none; border:none; color:var(--color-text-dim); cursor:pointer;">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+
+                <div id="scramble-display" class="word-display font-mono">????</div>
+
+                <div class="input-pill">
+                    <input type="text" id="inp-guess" class="clean-input" placeholder="GUESS..." maxlength="7" autocomplete="off">
+                    <button id="btn-submit" class="action-fab">
+                        <span class="material-symbols-rounded">arrow_upward</span>
+                    </button>
+                </div>
+
+                <div id="hints-area" style="min-height: 60px; margin-top: 20px;"></div>
+            </div>
+
+            <div id="game-state-end" class="g-card hidden" style="text-align: center;">
+                <span id="end-icon" class="material-symbols-rounded icon-xl" style="color: var(--color-success);">emoji_events</span>
+                <div id="end-word" class="word-display" style="font-size: 2.5rem; margin: 10px 0;">WORD</div>
+                <!-- FIXED: var(--c-text-dim) -> var(--color-text-dim) -->
+                <div id="end-score" class="font-mono" style="font-size: 1.5rem; color: var(--color-text-dim);">+0 PTS</div>
+                <button id="btn-restart" class="action-fab icon-lg" style="width: 70px; height: 70px; margin: 20px auto;">
+                    <span class="material-symbols-rounded">replay</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- === TRUTH OR DARE === -->
+        <section id="view-tod" class="view-container hidden">
+            <div class="hero-icon">
+                <span class="material-symbols-rounded">casino</span>
+            </div>
+
+            <div class="switch-toggle">
+                <button class="switch-btn active" data-mode="truth">TRUTH</button>
+                <button class="switch-btn" data-mode="dare">DARE</button>
+            </div>
+
+            <div class="flip-card" id="tod-card">
+                <div class="flip-inner">
+                    <div class="card-face card-front">
+                        <span class="material-symbols-rounded icon-xl" style="opacity: 0.5; margin-bottom: 20px;">touch_app</span>
+                        <!-- FIXED: var(--c-text-dim) -> var(--color-text-dim) -->
+                        <h3 style="color: var(--color-text-dim);">TAP TO REVEAL</h3>
+                    </div>
+                    <div class="card-face card-back">
+                        <span id="tod-type-icon" class="material-symbols-rounded icon-xl" style="margin-bottom: 20px;">visibility</span>
+                        <p id="tod-content" style="font-size: 1.5rem; font-weight: 600; line-height: 1.4;">???</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-center" style="margin-top: 10px;">
+                <!-- FIXED: var(--c-surface-2) -> var(--color-bg-surface-2) -->
+                <button id="btn-tod-next" class="action-fab" style="width: 60px; height: 60px; background: var(--color-bg-surface-2); color: var(--color-text-main);">
+                    <span class="material-symbols-rounded">skip_next</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- === LEADERBOARD === -->
+        <section id="view-leaderboard" class="view-container hidden">
+            <div class="hero-icon">
+                <span class="material-symbols-rounded" style="color: var(--color-warning);">trophy</span>
+            </div>
+
+            <div class="g-card" style="padding: 0;">
+                <div id="leaderboard-list"></div>
+            </div>
+        </section>
+
+
+        <!-- === PROFILE === -->
+        <section id="view-profile" class="view-container hidden">
+            <div class="g-card flex-center" style="flex-direction: column; padding: 40px;">
+                <div class="profile-avatar">
+                     <span class="material-symbols-rounded icon-xl">face</span>
+                </div>
+                <h2 id="profile-name">Guest Player</h2>
+                <!-- FIXED: var(--c-text-dim) -> var(--color-text-dim) -->
+                <p id="profile-email" class="font-mono" style="color: var(--color-text-dim); font-size: 0.9rem;">user@example.com</p>
+                
+                <!-- Logout Button in Profile -->
+                <button id="btn-logout-profile" class="btn-outline" style="margin-top: 20px;">
+                    <span class="material-symbols-rounded">logout</span> Logout
+                </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="g-card flex-center" style="flex-direction: column;">
+                    <span class="material-symbols-rounded icon-lg" style="color: var(--color-warning);">star</span>
+                    <span id="profile-score" class="font-mono" style="font-size: 2rem; font-weight: 700; margin-top: 10px;">0</span>
+                </div>
+                <div class="g-card flex-center" style="flex-direction: column;">
+                    <span class="material-symbols-rounded icon-lg" style="color: var(--color-primary);">history</span>
+                    <span id="profile-games" class="font-mono" style="font-size: 2rem; font-weight: 700; margin-top: 10px;">0</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--color-bg-surface-2); border: 1px solid var(--glass-border); padding: 10px 20px; border-radius: var(--radius-full); display: flex; align-items: center; gap: 10px; transition: 0.4s var(--ease-smooth); opacity: 0; pointer-events: none; z-index: 100;">
+        <span id="toast-icon" class="material-symbols-rounded">info</span>
+        <span id="toast-msg" style="font-weight: 600;">Message</span>
+    </div>
+
+    <!-- JS Modules -->
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/login.js"></script> 
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
+
+
