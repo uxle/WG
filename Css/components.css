@@ -1,0 +1,306 @@
+/*
+==========================================================================
+LEONUX UI - COMPONENT LIBRARY
+==========================================================================
+Purpose: Reusable UI elements (Buttons, Cards, Inputs).
+Focus: State management, Touch targets, Accessibility.
+==========================================================================
+*/
+
+/* ---------------------------------- */
+/* 1. NAVIGATION BUTTONS              */
+/* ---------------------------------- */
+.nav-btn {
+    appearance: none;
+    position: relative;
+    
+    /* Fluid Sizing for touch targets */
+    width: clamp(3rem, 5vw, 4.5rem);
+    height: clamp(3rem, 5vw, 4.5rem);
+    
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text-muted);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    transition: 
+        color var(--duration-fast) var(--ease-smooth),
+        background-color var(--duration-fast) var(--ease-smooth),
+        transform var(--duration-fast) var(--ease-elastic);
+        
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover effects (Desktop only) */
+@media (hover: hover) and (pointer: fine) {
+    .nav-btn:hover {
+        background-color: var(--color-bg-surface-2);
+        color: var(--color-text-main);
+        transform: translateY(-2px);
+    }
+}
+
+/* Active / Selected State */
+.nav-btn.active {
+    background-color: var(--color-primary-dim);
+    color: var(--color-primary);
+    box-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+/* Active Indicator Line */
+.nav-btn.active::after {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    width: 4px;
+    height: 50%;
+    background-color: var(--color-primary);
+    border-radius: var(--radius-full);
+    animation: indicatorSlideIn 0.3s var(--ease-elastic);
+}
+
+/* Mobile Indicator (Bottom/Top) */
+@media (max-width: 768px) {
+    .nav-btn.active::after {
+        left: 50%;
+        top: auto;
+        bottom: 0.2rem;
+        width: 40%;
+        height: 3px;
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes indicatorSlideIn {
+    from { height: 0; opacity: 0; }
+    to { height: 50%; opacity: 1; }
+}
+
+/* Keyboard Focus */
+.nav-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------- */
+/* 2. GLASS CARDS                     */
+/* ---------------------------------- */
+.g-card {
+    position: relative;
+    width: 100%;
+    
+    background: var(--glass-fill);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    
+    border: 1px solid var(--glass-border);
+    border-top: 1px solid var(--glass-border-highlight);
+    border-radius: var(--radius-lg);
+    
+    padding: var(--space-lg);
+    
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        inset 0 0 20px rgba(0,0,0,0.05);
+        
+    overflow: hidden;
+    transition: transform 0.3s var(--ease-smooth), border-color 0.3s ease;
+    
+    /* Improve text render on glass */
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.g-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ---------------------------------- */
+/* 3. INPUT FIELDS (PILL)             */
+/* ---------------------------------- */
+.input-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    
+    padding: 0.5rem;
+    padding-left: var(--space-md);
+    
+    transition: all 0.2s ease;
+}
+
+.input-pill:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 
+        0 0 0 2px var(--color-bg-base),
+        0 0 0 4px var(--color-primary-glow);
+    transform: scale(1.01);
+}
+
+.clean-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--color-text-main);
+    
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    min-width: 0;
+    caret-color: var(--color-primary);
+    padding: 0.25rem 0;
+}
+
+.clean-input::placeholder {
+    color: var(--color-text-dim);
+    opacity: 0.5;
+    font-weight: 400;
+}
+
+.clean-input:focus { outline: none; }
+
+/* ---------------------------------- */
+/* 4. ACTION FAB (Floating Button)    */
+/* ---------------------------------- */
+.action-fab {
+    appearance: none;
+    border: none;
+    flex-shrink: 0;
+    
+    width: clamp(3rem, 5vw, 4rem);
+    height: clamp(3rem, 5vw, 4rem);
+    
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--color-primary) 0%, #2563eb 100%);
+    color: white;
+    
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    
+    box-shadow: 0 4px 15px var(--color-primary-glow);
+    transition: all 0.2s var(--ease-snappy);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shine Effect */
+.action-fab::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+    pointer-events: none;
+}
+
+.action-fab:hover::before { left: 100%; }
+
+.action-fab:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px var(--color-primary-glow);
+}
+
+.action-fab:active { transform: scale(0.95); }
+
+/* Start Button Variant */
+.icon-xl.action-fab {
+    width: clamp(5rem, 10vw, 8rem);
+    height: clamp(5rem, 10vw, 8rem);
+}
+
+/* ---------------------------------- */
+/* 5. SWITCH TOGGLE                   */
+/* ---------------------------------- */
+.switch-toggle {
+    display: flex; /* Changed from inline-flex for better structure */
+    justify-content: center; /* Center content */
+    background: var(--color-bg-surface-1);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-2xs);
+    position: relative;
+    margin: 0 auto var(--space-lg) auto; /* Centers the toggle itself */
+    width: fit-content;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.switch-btn {
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-full);
+    color: var(--color-text-dim);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.switch-btn.active {
+    color: var(--color-text-main);
+    background-color: var(--color-bg-surface-3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ---------------------------------- */
+/* 6. TOAST NOTIFICATION              */
+/* ---------------------------------- */
+#toast {
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--color-primary-dim);
+    color: var(--color-text-main);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    z-index: var(--z-toast);
+}
+
+#toast-icon { color: var(--color-primary); }
+
+/* ---------------------------------- */
+/* 7. OUTLINE BUTTON (LOGOUT)         */
+/* ---------------------------------- */
+.btn-outline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    
+    background: transparent;
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+    
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-smooth);
+}
+
+.btn-outline:hover {
+    background: var(--color-error-bg);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px var(--color-error-bg);
+}
+
+.btn-outline:active {
+    transform: scale(0.98);
+}
+
+
